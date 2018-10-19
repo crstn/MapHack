@@ -29,7 +29,7 @@ def findmachine():
 
     cur = conn.cursor()
 
-    cur.execute("""SELECT ST_AsGeoJSON(geom)
+    cur.execute("""SELECT vejnavn, type, ST_AsGeoJSON(geom)
     FROM parkomat
     WHERE ST_DWITHIN(
     	ST_SetSRID(ST_MakePoint(%s, %s), 4326)::geography, geom::geography, 1000)
@@ -37,13 +37,17 @@ def findmachine():
     	ST_MakePoint(%s, %s), 4326)::geography, geom::geography)
     LIMIT 1;""", (lng, lat, lng, lat ))
 
+    res = cur.fetchone()
 
-    closest_machine = json.dumps(cur.fetchone())
+    vejnavn = res[0]
+    type = res[1]
+
+    closest_machine = json.dumps(res[2])
     closest_coords = closest_machine.split("[[")[1]
 
     coords = closest_coords.split("]]")[0]
 
-    response = '{"type": "Feature","geometry": {"type": "Point","coordinates": ['+coords+']}}'
+    response = '{"type": "Feature","geometry": {"type": "Point","coordinates": ['+coords+']},"properties": {"vejnavn": "'+vejnavn+'", "type": "'+type+'"}}'
 
 
 

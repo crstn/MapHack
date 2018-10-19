@@ -20,8 +20,13 @@ function onMapClick(e) {
   console.log(url)
 
   $.getJSON(url, function(data){
+
+    console.log(data)
+
     // add GeoJSON layer to the map once the file is loaded
-    myLayer = L.geoJson(data)
+    myLayer = L.geoJson(data).bindPopup(function (layer) {
+    return layer.feature.properties.vejnavn;
+})
     myLayer.addTo(mymap);
   });
 
