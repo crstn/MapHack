@@ -8,7 +8,8 @@ var mymap = L.map('map')
     }));
 
 function onMapClick(e) {
-  alert("You clicked the map at " + e.latlng);
+  var url = "http://localhost:8000/findmachine?lat="+e.latlng.lat+"&lng="+e.latlng.lng
+  console.log(url)
 }
 
 mymap.on('click', onMapClick);
