@@ -7,9 +7,24 @@ var mymap = L.map('map')
                   <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
     }));
 
+var myLayer;
+
 function onMapClick(e) {
-  var url = "http://localhost:8000/findmachine?lat="+e.latlng.lat+"&lng="+e.latlng.lng
+
+  if(myLayer){
+      mymap.removeLayer(myLayer);
+  }
+
+
+  var url = "http://127.0.0.1:5000/findmachine?lat="+e.latlng.lat+"&lng="+e.latlng.lng
   console.log(url)
+
+  $.getJSON(url, function(data){
+    // add GeoJSON layer to the map once the file is loaded
+    myLayer = L.geoJson(data)
+    myLayer.addTo(mymap);
+  });
+
 }
 
 mymap.on('click', onMapClick);
